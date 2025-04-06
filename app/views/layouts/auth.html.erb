@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Events Auth</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+  </head>
+
+  <body>
+    <div>
+      <div>
+        <h2>Authentication page!</h2>
+      </div>
+      <div style="display: flex; justify-content: center; align-items: center">
+
+        <% if notice %>
+          <div>
+            <%= notice %>
+          </div>
+        <% end %>
+
+        <% if alert %>
+          <div>
+            <%= alert %>
+          </div>
+        <% end %>
+
+        <div>
+          <%= yield %>
+        </div>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

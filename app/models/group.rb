@@ -1,3 +1,6 @@
+# Group model
+# - attr: name:string, description:text, visibility:integer, owner_id:bigint
+# - when a new Group is created the owner is also added as a member to the join table
 class Group < ApplicationRecord
   enum :visibility, { everyone: 0, secret: 1, personal: 2 }
 

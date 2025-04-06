@@ -1,3 +1,6 @@
+# Event model
+# - attr: name:string, description:text, start_date:datetime, end_date:datetime,
+#         location:string, creator_id:bigint, group_id:bigint
 class Event < ApplicationRecord
   belongs_to :group
   belongs_to :creator, class_name: "User"
