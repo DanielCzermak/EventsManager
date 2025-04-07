@@ -1,0 +1,54 @@
+<%# Filtering options card %>
+<div class="card mb-4">
+  <div class="card-header bg-dark">
+    <h5 class="mb-0 text-white"><i class="bi bi-funnel me-2"></i> Filter Events</h5>
+  </div>
+  <div class="card-body">
+    <%= form_with url: events_index_path, method: :get, class: "row g-3 align-items-end", id: "filter-form" do |form| %>
+      <div class="col-md-6">
+        <%= form.select :group_filter,
+                        [["All Groups", "all"]] +
+                        @user_groups.map { |g| [g.personal? ? "My Events" : g.name, g.id] },
+                        { selected: @group_filter },
+                        { class: "form-select", onchange: "this.form.submit();" } %>
+      </div>
+      <div class="col-md-6">
+        <%= form.select :temporal_filter,
+                        [["Upcoming Events", "upcoming"], ["Past Events", "past"]],
+                        { selected: @temporal_filter },
+                        { class: "form-select", onchange: "this.form.submit();" } %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# List of events %>
+<div class="row">
+  <div class="w-100">
+    <div class="card">
+      <div class="card-header bg-dark">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="mb-0 text-white"><i class="bi bi-calendar-week me-2"></i> Your events</h5>
+          <%= link_to "New Event", events_new_path, class: "btn btn-dark border border-light" %>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+
+        <%# Display events only if they exist %>
+        <% if @user_events.any? %>
+          <div class="list-group list-group-flush">
+            <%= render partial: "event", collection: @user_events %>
+          </div>
+
+          <%# This is displayed if there are no events for the user %>
+        <% else %>
+          <div class="text-center py-5">
+            <i class="bi bi-calendar2-x fs-1 text-muted"></i>
+            <p class="mt-3 mb-0">You have no events!</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

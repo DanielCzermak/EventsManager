@@ -36,19 +36,19 @@
           </li>
 
           <li class="nav-item">
-            <%= link_to "#", class: "nav-link" do %>
+            <%= link_to "#", class: "nav-link #{current_page?(root_path) ? 'activ' : ''}" do %>
               <i class="bi bi-people me-1"></i>Groups
             <% end %>
           </li>
 
           <li class="nav-item">
-            <%= link_to "#", class: "nav-link" do %>
+            <%= link_to "#", class: "nav-link #{current_page?(root_path) ? 'activ' : ''}" do %>
               <i class="bi bi-calendar2-week me-1"></i>Calendar
             <% end %>
           </li>
 
           <li class="nav-item">
-            <%= link_to "#", class: "nav-link" do %>
+            <%= link_to events_index_path, class: "nav-link #{current_page?(events_index_path) ? 'active' : ''}" do %>
               <i class="bi bi-list-ul me-1"></i>Events
             <% end %>
           </li>

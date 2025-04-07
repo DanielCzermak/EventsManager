@@ -54,19 +54,16 @@
                     <div class="col-4 text-end">
                       <small class="text-muted">
                         <%= event.start_date.strftime("%Y-%m-%d") %>
-                        <% if event.end_date.present? && (event.end_date.to_date - event.start_date.to_date) >= 1 %>
-                          - <%= event.end_date.strftime("%Y-%m-%d") %>
+
+                        <% if event.end_date.present? %>
+                          <% if event.end_date.to_date > event.start_date.to_date %>
+                            - <%= event.end_date.strftime("%Y-%m-%d") %>
+                          <% end %>
                           <br>
+                          <%= event.start_date.strftime("%H:%M") %> - <%= event.end_date.strftime("%H:%M") %>
                         <% else %>
                           <br>
-                        <% end %>
-                        <%= event.start_date.strftime("%H:%M") %>
-                        <% if event.end_date.present? %>
-                          <% if (event.end_date.to_date - event.start_date.to_date) >= 1 %>
-                            - <%= event.end_date.strftime("%H:%M") %>
-                          <% else %>
-                            - <%= event.end_date.strftime("%H:%M") %>
-                          <% end %>
+                          <%= event.start_date.strftime("%H:%M") %>
                         <% end %>
                       </small>
                     </div>
