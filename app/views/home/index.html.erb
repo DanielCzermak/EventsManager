@@ -3,6 +3,13 @@
     <div>
       <h1 class="">Welcome, <%= current_user.username %></h1>
     </div>
+    <div>
+      <h5 class="text-muted mb-0">
+        <i class="bi bi-clock me-2"></i>
+        <%# Span display current time and iterates it every second with the script at the bottom %>
+        <span id="currentDateTime"></span>
+      </h5>
+    </div>
   </div>
 <% end %>
 
@@ -17,10 +24,58 @@
         </div>
 
         <div class="card-body p-0">
+
+          <%# Display next weeks events only if they exist %>
           <% if @events_this_week.any? %>
             <div class="list-group list-group-flush">
-              #TODO events listed here
+              <% @events_this_week.each do |event| %>
+                <%= link_to root_path, class: "list-group-item list-group-item-action" do %>
+                  <div class="row align-items-center">
+                    <div class="col-8">
+                      <h6 class="mb-1"><%= event.name %></h6>
+                      <p class="mb-0 text-muted small">
+                        <i class="bi bi-people me-1"></i>
+                        <% if event.group.personal? %>
+                          My Event
+                        <% else %>
+                          <%= event.group.name %>
+                        <% end %>
+
+                        <% if event.location.present? %>
+                          <span class="ms-2"><i class="bi bi-geo-alt me-1"></i><%= event.location %></span>
+                        <% end %>
+                      </p>
+                    </div>
+
+                    <%# Decides how start and end date is displayed based on event length/end date presence%>
+                    <%# No end date: only start datetime %>
+                    <%# Start and end date same day: start datetime and end time %>
+                    <%# Start and end diff. day: start datetime and end datetime %>
+                    <div class="col-4 text-end">
+                      <small class="text-muted">
+                        <%= event.start_date.strftime("%Y-%m-%d") %>
+                        <% if event.end_date.present? && (event.end_date.to_date - event.start_date.to_date) >= 1 %>
+                          - <%= event.end_date.strftime("%Y-%m-%d") %>
+                          <br>
+                        <% else %>
+                          <br>
+                        <% end %>
+                        <%= event.start_date.strftime("%H:%M") %>
+                        <% if event.end_date.present? %>
+                          <% if (event.end_date.to_date - event.start_date.to_date) >= 1 %>
+                            - <%= event.end_date.strftime("%H:%M") %>
+                          <% else %>
+                            - <%= event.end_date.strftime("%H:%M") %>
+                          <% end %>
+                        <% end %>
+                      </small>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
             </div>
+
+          <%# This is displayed if there are no events this week for the user %>
           <% else %>
             <div class="text-center py-5">
               <i class="bi bi-calendar2-x fs-1 text-muted"></i>
@@ -32,3 +87,13 @@
     </div>
   </div>
 </div>
+
+<script>
+    // Update time every second
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById("currentDateTime").textContent = now.toLocaleString("hu-HU");
+        setTimeout(updateDateTime, 1000);
+    }
+    document.addEventListener("DOMContentLoaded", updateDateTime);
+</script>
