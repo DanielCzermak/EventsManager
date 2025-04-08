@@ -16,6 +16,14 @@ class Event < ApplicationRecord
     joins(:group).where(group_id: user.group_ids)
   }
 
+  def start_time
+    start_date
+  end
+
+  def end_time
+    end_date
+  end
+
   private
 
   def end_date_after_start_date
