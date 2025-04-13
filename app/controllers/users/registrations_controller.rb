@@ -1,10 +1,10 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  skip_before_action :authenticate_user!, only: [:new, :create]
-  
-  layout "auth"
+  skip_before_action :authenticate_user!, only: [ :new, :create ]
 
-  before_action :configure_sign_up_params, only: [:create]
-  before_action :configure_account_update_params, only: [:update]
+  layout "auth", only: [ :new, :create ]
+
+  before_action :configure_sign_up_params, only: [ :create ]
+  before_action :configure_account_update_params, only: [ :update ]
 
   protected
 
@@ -19,4 +19,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     root_path
   end
+
 end
