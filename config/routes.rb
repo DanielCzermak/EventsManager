@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :groups do
-    member do
+    collection do
       post "join"
+    end
+    member do
       delete "leave"
     end
   end
