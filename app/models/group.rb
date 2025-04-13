@@ -17,6 +17,8 @@ class Group < ApplicationRecord
   before_create :generate_join_code
   after_create :add_owner_as_member
 
+  scope :public_groups, -> { where(visibility: :everyone) }
+
   private
 
   def add_owner_as_member

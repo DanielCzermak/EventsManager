@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :groups do
+    member do
+      post "join"
+      delete "leave"
+    end
+  end
+
   get "calendar/index", to: "calendar#index", as: "calendar"
 
   get "events", to: "events#index", as: "events_index"
