@@ -14,6 +14,7 @@ class Group < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :visibility, presence: true
 
+  before_create :generate_join_code
   after_create :add_owner_as_member
 
   private
@@ -22,5 +23,9 @@ class Group < ApplicationRecord
     unless group_memberships.exists?(user_id: owner.id)
       group_memberships.create!(user: owner)
     end
+  end
+
+  def generate_join_code
+    self.joinCode = SecureRandom.alphanumeric(8).upcase
   end
 end

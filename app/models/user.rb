@@ -19,7 +19,7 @@ class User < ApplicationRecord
   has_many :created_events, class_name: "Event", foreign_key: :creator_id, dependent: :nullify
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }
-  validates_format_of :username, with: /^[a-zA-Z0-9_.]*$/, :multiline => true
+  validates_format_of :username, with: /^[a-zA-Z0-9_.]*$/, multiline: true
   validates :date_of_birth, presence: true
 
   after_create :create_personal_group
@@ -27,7 +27,7 @@ class User < ApplicationRecord
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if (login = conditions.delete(:login))
-      where(conditions.to_h).where(["username = :value OR email = :value", { :value => login.downcase }]).first
+      where(conditions.to_h).where([ "username = :value OR email = :value", { value: login.downcase } ]).first
     elsif conditions.has_key?(:username) || conditions.has_key?(:email)
       where(conditions.to_h).first
     end

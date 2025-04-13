@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_05_195533) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_13_111143) do
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -43,6 +43,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_05_195533) do
     t.datetime "updated_at", null: false
     t.integer "visibility", null: false
     t.bigint "owner_id", null: false
+    t.string "joinCode", default: "123", null: false
     t.index ["owner_id"], name: "fk_rails_d62517ff60"
   end
 
