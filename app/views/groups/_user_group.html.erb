@@ -1,0 +1,102 @@
+<div class="list-group-item" id="public-group-<%= group.id %>">
+
+  <%# Event data (without desc, since it is in the collapse) %>
+  <div class="row align-items-center">
+    <div class="col-10">
+      <h6 class="mb-1">
+        <% if group.personal? %>
+          My Events
+        <% else %>
+          <%= group.name %>
+        <% end %>
+      </h6>
+      <p class="mb-0 text-muted small">
+        <i class="bi bi-people me-1"></i>
+        <% if group.personal? %>
+          Only You!
+        <% else %>
+          <%= group.users.count %> members
+        <% end %>
+
+        <span class="ms-2"><i class="bi bi-eye me-1"></i><%= group.visibility.capitalize %></span>
+      </p>
+    </div>
+
+    <%# Collapse button %>
+    <div class="col-2 text-end">
+      <button class="btn btn-sm"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse-<%= group.id %>">
+        <i class="bi bi-chevron-down"></i>
+      </button>
+    </div>
+
+    <%# Collapse with description and action buttons %>
+    <div class="collapse mt-3" id="collapse-<%= group.id %>">
+      <div class="card card-body bg-light">
+        <% if group.description.present? %>
+          <h6>Description:</h6>
+          <p><%= group.description %></p>
+        <% end %>
+
+        <% unless group.personal? %>
+          <div>
+            <p>Join code: <%= group.join_code %></p>
+          </div>
+        <% end %>
+
+        <% unless group.personal? %>
+          <div class="overflow-auto border" style="max-height: 80px;">
+            <% group.users.each do |member| %>
+              <div class="border-bottom p-1">
+                <% if member == group.owner %>
+                  <i class="bi bi-star-fill text-warning me-1"></i>
+                <% else %>
+                  <i class="bi bi-person-fill text-secondary me-1"></i>
+                <% end %>
+                <%= member.username %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="d-flex justify-content-end mt-2">
+          <% unless group.personal? %>
+            <% if group.owner == current_user %>
+              <%# Edit button %>
+              <%= link_to edit_group_path(group), class: "btn btn-sm btn-outline-primary me-2" do %>
+                <i class="bi bi-pencil"></i> Edit
+              <% end %>
+              <%# Delete button %>
+              <%= button_to group_path(group),
+                            method: :delete,
+                            form: { onsubmit: "return confirm('Are you sure you want to delete #{ group.name }?');" },
+                            class: "btn btn-sm btn-outline-danger" do %>
+                <i class="bi bi-trash"></i> Delete
+              <% end %>
+            <% else %>
+              <% if group.users.exists?(id: current_user.id) %>
+                <%# Leave button %>
+                <%= button_to leave_group_path(group),
+                              method: :delete,
+                              form: { onsubmit: "return confirm('Are you sure you want to leave #{ group.name } ? ');" },
+                              class: "btn btn-sm btn-outline-danger" do %>
+                  <i class="bi bi-box-arrow-right"></i> Leave
+                <% end %>
+              <% else %>
+                <%# Join button %>
+                <%= button_to join_groups_path,
+                              method: :post,
+                              params: { joinCode: group.join_code },
+                              form: { onsubmit: "return confirm('Are you sure you want to join #{ group.name }?');" },
+                              class: "btn btn-sm btn-outline-primary" do %>
+                  <i class="bi bi-person-add"></i> Join
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

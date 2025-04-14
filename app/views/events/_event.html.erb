@@ -1,0 +1,76 @@
+<div class="list-group-item" id="event-<%= event.id %>">
+
+  <%# Event data (without desc, since it is in the collapse) %>
+  <div class="row align-items-center">
+    <div class="col-8">
+      <h6 class="mb-1"><%= event.name %></h6>
+      <p class="mb-0 text-muted small">
+        <i class="bi bi-people me-1"></i>
+        <% if event.group.personal? %>
+          My Event
+        <% else %>
+          <%= event.group.name %>
+        <% end %>
+
+        <% if event.location.present? %>
+          <span class="ms-2"><i class="bi bi-geo-alt me-1"></i><%= event.location %></span>
+        <% end %>
+      </p>
+    </div>
+
+    <%# Decides how start and end date is displayed based on event length/end date presence%>
+    <%# No end date: only start datetime %>
+    <%# Start and end date same day: start datetime and end time %>
+    <%# Start and end diff. day: start datetime and end datetime %>
+    <div class="col-3 text-end">
+      <small class="text-muted">
+        <%= event.start_date.strftime("%Y-%m-%d") %>
+
+        <% if event.end_date.present? %>
+          <% if event.end_date.to_date > event.start_date.to_date %>
+            - <%= event.end_date.strftime("%Y-%m-%d") %>
+          <% end %>
+          <br>
+          <%= event.start_date.strftime("%H:%M") %> - <%= event.end_date.strftime("%H:%M") %>
+        <% else %>
+          <br>
+          <%= event.start_date.strftime("%H:%M") %>
+        <% end %>
+      </small>
+    </div>
+
+    <%# Collapse button %>
+    <div class="col-1 text-end">
+      <button class="btn btn-sm"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse-<%= event.id %>">
+        <i class="bi bi-chevron-down"></i>
+      </button>
+    </div>
+
+    <%# Collapse with description and action buttons %>
+    <div class="collapse mt-3" id="collapse-<%= event.id %>">
+      <div class="card card-body bg-light">
+        <% if event.description.present? %>
+          <h6>Description:</h6>
+          <p><%= event.description %></p>
+        <% end %>
+
+        <% if event.creator == current_user || event.group.owner == current_user %>
+          <div class="d-flex justify-content-end mt-2">
+            <%= link_to events_edit_path(event), class: "btn btn-sm btn-outline-primary me-2" do %>
+              <i class="bi bi-pencil"></i> Edit
+            <% end %>
+
+            <%= button_to events_destroy_path(event),
+                          method: :delete,
+                          form: { onsubmit: "return confirm('Are you sure you want to delete #{ event.name }?');" },
+                          class: "btn btn-sm btn-outline-danger" do %>
+              <i class="bi bi-trash"></i> Delete
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

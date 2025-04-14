@@ -8,3 +8,21 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.sc-table {
+    table-layout: fixed;
+}
+
+.sc-header-cell {
+    width: 14.28571429%;
+}
+
+.sc-content-cell {
+    width: 14.28571429%;
+    height: 6.5rem;
+}
+
+.calendar-events {
+    height: calc(100% - 2rem);
+    overflow-y: auto;
+}

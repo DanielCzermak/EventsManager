@@ -1,0 +1,33 @@
+<div class="simple-calendar">
+  <div class="row my-3">
+    <nav class="d-flex justify-content-between flex-row align-items-end">
+      <%= link_to t('simple_calendar.previous', default: 'Previous'), calendar.url_for_previous_view, class: "btn btn-outline-dark", style: "width: 14.28571429%" %>
+      <time datetime="<%= start_date.strftime('%Y-%m') %>" class="display-5 "><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></time>
+      <%= link_to t('simple_calendar.next', default: 'Next'), calendar.url_for_next_view, class: "btn btn-outline-dark", style: "width: 14.28571429%" %>
+    </nav>
+  </div>
+
+  <table class="table table-bordered sc-table">
+    <thead>
+      <tr>
+        <% date_range.slice(0, 7).each do |day| %>
+          <th class="text-center fw-bold sc-header-cell">
+            <%= t('date.abbr_day_names')[day.wday] %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% date_range.each_slice(7) do |week| %>
+        <tr style>
+          <% week.each do |day| %>
+            <%= content_tag :td, class: calendar.td_classes_for(day).push("sc-content-cell") do %>
+              <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
