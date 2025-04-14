@@ -45,6 +45,21 @@
           </div>
         <% end %>
 
+        <% unless group.personal? %>
+          <div class="overflow-auto border" style="max-height: 80px;">
+            <% group.users.each do |member| %>
+              <div class="border-bottom p-1">
+                <% if member == group.owner %>
+                  <i class="bi bi-star-fill text-warning me-1"></i>
+                <% else %>
+                  <i class="bi bi-person-fill text-secondary me-1"></i>
+                <% end %>
+                <%= member.username %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
         <div class="d-flex justify-content-end mt-2">
           <% unless group.personal? %>
             <% if group.owner == current_user %>
