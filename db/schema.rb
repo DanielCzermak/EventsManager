@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_111143) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_13_212702) do
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 64, null: false
     t.text "description"
     t.datetime "start_date", null: false
     t.datetime "end_date"
-    t.string "location"
+    t.string "location", limit: 100
     t.bigint "creator_id", null: false
     t.bigint "group_id", null: false
     t.datetime "created_at", null: false
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_111143) do
     t.index ["group_id"], name: "index_events_on_group_id"
     t.index ["name"], name: "index_events_on_name"
     t.index ["start_date"], name: "index_events_on_start_date"
+    t.check_constraint "`end_date` is null or `end_date` > `start_date`", name: "check_end_after_start"
   end
 
   create_table "group_memberships", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -33,27 +34,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_111143) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "joined_at", default: -> { "current_timestamp(6)" }
+    t.index ["group_id"], name: "fk_rails_d05778f88b"
     t.index ["user_id", "group_id"], name: "index_group_memberships_on_user_id_and_group_id", unique: true
   end
 
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 50, null: false
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "visibility", null: false
     t.bigint "owner_id", null: false
-    t.string "joinCode", default: "123", null: false
+    t.string "join_code", default: "123", null: false
     t.index ["owner_id"], name: "fk_rails_d62517ff60"
+    t.index ["visibility"], name: "index_groups_on_visibility"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "email", default: "", null: false
+    t.string "email", limit: 50, default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.string "username", null: false
+    t.string "username", limit: 28, null: false
     t.date "date_of_birth", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,5 +67,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_111143) do
 
   add_foreign_key "events", "groups"
   add_foreign_key "events", "users", column: "creator_id"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "users"
   add_foreign_key "groups", "users", column: "owner_id"
 end

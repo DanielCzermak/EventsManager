@@ -1,6 +1,5 @@
 class GroupsController < ApplicationController
   before_action :group_auth_check, only: [ :edit, :update, :destroy ]
-  before_action :noshow, only: [ :show ]
 
   def index
     @user_groups = current_user.groups
@@ -20,7 +19,11 @@ class GroupsController < ApplicationController
     @group.owner = current_user
 
     if @group.save
+      flash[:success] = "#{@group.name} successfully created."
       redirect_to groups_path
+    else
+      flash[:alert] = "Failed to create group!"
+      render :new
     end
   end
 
@@ -29,26 +32,37 @@ class GroupsController < ApplicationController
 
   def update
     if @group.update(group_params)
+      flash[:success] = "#{@group.name} successfully updated."
       redirect_to groups_path
+    else
+      flash[:alert] = "Failed to update the group!"
+      render :edit
     end
   end
 
   def destroy
-    @group.destroy
+    if @group.destroy
+      flash[:success] = "Group successfully deleted."
+    else
+      flash[:alert] = "Failed to delete group."
+    end
     redirect_to groups_path
   end
 
   def join
-    group = Group.find_by(joinCode: params[:joinCode])
+    group = Group.find_by(join_code: params[:joinCode])
     if group
       membership = GroupMembership.find_by(group: group, user: current_user)
       unless membership
         GroupMembership.create!(group: group, user: current_user, joined_at: DateTime.now)
-        redirect_to groups_path
+        flash[:success] = "#{group.name} successfully joined!"
+      else
+        flash[:notice] = "You are already part of #{group.name}!"
       end
     else
-      redirect_to groups_path
+      flash[:alert] = "Invalid join code!"
     end
+    redirect_to groups_path
   end
 
   def leave
@@ -57,11 +71,12 @@ class GroupsController < ApplicationController
       membership = GroupMembership.find_by(group: group, user: current_user)
       if membership
         membership.destroy
-        redirect_to groups_path
+        flash[:success] = "You have successfully left #{group.name}!"
       end
     else
-      redirect_to groups_path
+      flash[:alert] = "Group not found. Please try again."
     end
+    redirect_to groups_path
   end
 
   private
@@ -73,13 +88,10 @@ class GroupsController < ApplicationController
   def group_auth_check
     @group = Group.find(params[:id])
     unless @group.owner == current_user
+      flash[:alert] = "You aren't authorized to perform this action!"
       Rails.logger.warn("Illegal action attempted on group #{@group.id}!!")
       redirect_to groups_path
     end
-  end
-
-  def noshow
-    redirect_to groups_path
   end
 
 end

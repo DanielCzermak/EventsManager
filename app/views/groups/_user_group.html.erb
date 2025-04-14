@@ -41,7 +41,7 @@
 
         <% unless group.personal? %>
           <div>
-            <p>Join code: <%= group.joinCode %></p>
+            <p>Join code: <%= group.join_code %></p>
           </div>
         <% end %>
 
@@ -72,7 +72,7 @@
                 <%# Join button %>
                 <%= button_to join_groups_path,
                               method: :post,
-                              params: { joinCode: group.joinCode },
+                              params: { joinCode: group.join_code },
                               form: { onsubmit: "return confirm('Are you sure you want to join #{ group.name }?');" },
                               class: "btn btn-sm btn-outline-primary" do %>
                   <i class="bi bi-person-add"></i> Join

@@ -5,7 +5,10 @@ class Event < ApplicationRecord
   belongs_to :group
   belongs_to :creator, class_name: "User"
 
-  validates :name, :start_date, presence: true
+  validates :name, :start_date, presence: true, length: { in: 3..64 }
+  validates :description, length: { maximum: 1000 }, allow_blank: true
+  validates :location, length: { maximum: 100 }, allow_blank: true
+  validates :creator_id, :group_id, presence: true
   validate :end_date_after_start_date, if: -> { end_date.present? }
 
   scope :upcoming, -> { where("start_date > ?", Time.current).order(start_date: :asc) }
@@ -13,13 +16,13 @@ class Event < ApplicationRecord
 
   scope :visible_to, ->(user) {
     return none if user.nil?
-    joins(:group).where(group_id: user.group_ids)
+    joins(:group).where(groups: { id: user.group_ids })
   }
 
+  # Needed for simple calendar
   def start_time
     start_date
   end
-
   def end_time
     end_date
   end

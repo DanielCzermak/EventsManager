@@ -11,10 +11,13 @@ class Group < ApplicationRecord
 
   has_many :events, dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true
-  validates :visibility, presence: true
+  validates :name, presence: true, uniqueness: true, length: { in: 3..50 }
+  validates :description, length: { maximum: 1000 }, allow_blank: true
+  validates :owner_id, presence: true
+  validates :visibility, inclusion: { in: visibilities.keys }
+  validates :join_code, presence: true, uniqueness: true, length: { is: 8 }
 
-  before_create :generate_join_code
+  before_validation :generate_join_code, on: :create
   after_create :add_owner_as_member
 
   scope :public_groups, -> { where(visibility: :everyone) }
@@ -22,12 +25,10 @@ class Group < ApplicationRecord
   private
 
   def add_owner_as_member
-    unless group_memberships.exists?(user_id: owner.id)
-      group_memberships.create!(user: owner)
-    end
+    group_memberships.find_or_create_by!(user: owner)
   end
 
   def generate_join_code
-    self.joinCode = SecureRandom.alphanumeric(8).upcase
+    self.join_code = SecureRandom.alphanumeric(8).upcase
   end
 end

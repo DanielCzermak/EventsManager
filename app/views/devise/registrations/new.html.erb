@@ -1,17 +1,19 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <div class="field mb-2">
     <%= f.label :email, class: "form-label" %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control #{"is-invalid" if resource.errors[:email].any?}" %>
+    <small class="form-text text-muted">Between 5 and 50 characters</small>
   </div>
 
   <div class="field mb-2">
     <%= f.label :username, class: "form-label" %><br />
-    <%= f.text_field :username, required: true, class: "form-control" %>
+    <%= f.text_field :username, required: true, class: "form-control #{"is-invalid" if resource.errors[:username].any?}" %>
+    <small class="form-text text-muted">Between 3 and 28 characters</small>
   </div>
 
   <div class="field mb-2">
     <%= f.label :date_of_birth, class: "form-label" %><br />
-    <%= f.date_field :date_of_birth, required: true, class: "form-control" %>
+    <%= f.date_field :date_of_birth, required: true, class: "form-control #{"is-invalid" if resource.errors[:date_of_birth].any?}" %>
   </div>
 
   <div class="field mb-2">
@@ -19,12 +21,12 @@
     <% if @minimum_password_length %>
       <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+    <%= f.password_field :password, autocomplete: "new-password", class: "form-control #{"is-invalid" if resource.errors[:password].any?}" %>
   </div>
 
   <div class="field mb-2">
     <%= f.label :password_confirmation, class: "form-label" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control #{"is-invalid" if resource.errors[:password_confirmation].any?}" %>
   </div>
 
   <div class="actions mb-2 d-grid">
@@ -37,5 +39,5 @@
 </div>
 
 <div>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= render partial: "devise/shared/error_messages" %>
 </div>

@@ -17,7 +17,12 @@ class EventsController < ApplicationController
     end
 
     if @group_filter != "all"
-      @user_events = @user_events.where(group_id: @group_filter)
+      if current_user.groups.exists?(id: @group_filter)
+        @user_events = @user_events.where(group_id: @group_filter)
+      else
+        flash[:alert] = "Invalid filter!"
+        @group_filter = "all"
+      end
     end
 
     @user_events = @user_events.order(start_date: (@temporal_filter == "upcoming" ? :asc : :desc))
@@ -33,7 +38,11 @@ class EventsController < ApplicationController
     @event.creator = current_user
 
     if @event.save
+      flash[:success] = "#{@event.name} successfully created!"
       redirect_to events_index_path
+    else
+      flash[:alert] = "Failed to create event!"
+      render :new
     end
   end
 
@@ -43,12 +52,20 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
+      flash[:success] = "Edits to #{@event.name} successfully saved!"
       redirect_to events_index_path
+    else
+      flash[:alert] = "Failed to save edits!"
+      render :edit
     end
   end
 
   def destroy
-    @event.destroy
+    if @event.destroy
+      flash[:success] = "Event successfully deleted!"
+    else
+      flash[:alert] = "Failed to delete #{@event.name}!"
+    end
     redirect_to events_index_path
   end
 
@@ -62,6 +79,7 @@ class EventsController < ApplicationController
   def event_auth_check
     @event = Event.find(params[:id])
     unless @event.creator == current_user || @event.group.owner == current_user
+      flash[:alert] = "You aren't authorized to perform this action!"
       Rails.logger.warn("Illegal action attempted on event #{@event.id}!!")
       redirect_to events_index_path
     end
