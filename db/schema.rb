@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_212702) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_122809) do
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", limit: 64, null: false
     t.text "description"
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_212702) do
     t.bigint "group_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "frequency", default: 0, null: false
     t.index ["creator_id"], name: "index_events_on_creator_id"
     t.index ["group_id"], name: "index_events_on_group_id"
     t.index ["name"], name: "index_events_on_name"

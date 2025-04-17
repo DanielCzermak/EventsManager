@@ -2,12 +2,13 @@ class EventsController < ApplicationController
   before_action :event_auth_check, only: [ :edit, :update, :destroy ]
 
   def index
+    @user_events = Event.visible_to(current_user)
+
     @user_groups = current_user.groups
 
     @temporal_filter = params[:temporal_filter] || "upcoming"
     @group_filter = params[:group_filter] || "all"
-
-    @user_events = Event.visible_to(current_user)
+    @frequency_filter = params[:frequency_filter] || "all"
 
     case @temporal_filter
     when "upcoming"
@@ -23,6 +24,10 @@ class EventsController < ApplicationController
         flash[:alert] = "Invalid filter!"
         @group_filter = "all"
       end
+    end
+
+    if @frequency_filter != "all"
+      @user_events = @user_events.with_frequency(@frequency_filter.to_sym)
     end
 
     @user_events = @user_events.order(start_date: (@temporal_filter == "upcoming" ? :asc : :desc))
@@ -73,7 +78,7 @@ class EventsController < ApplicationController
 
   def event_params
     params.require(:event)
-          .permit(:name, :description, :start_date, :end_date, :location, :group_id)
+          .permit(:name, :description, :start_date, :end_date, :location, :group_id, :frequency)
   end
 
   def event_auth_check

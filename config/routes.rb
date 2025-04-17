@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get "calendar/index", to: "calendar#index", as: "calendar"
+  get "calendar/", to: "calendar#index", as: "calendar"
 
   get "events", to: "events#index", as: "events_index"
   get "events/new", to: "events#new", as: "events_new"

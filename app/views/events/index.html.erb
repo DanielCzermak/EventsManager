@@ -5,17 +5,23 @@
   </div>
   <div class="card-body">
     <%= form_with url: events_index_path, method: :get, class: "row g-3 align-items-end", id: "filter-form" do |form| %>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <%= form.select :group_filter,
                         [["All Groups", "all"]] +
                         @user_groups.map { |g| [g.personal? ? "My Events" : g.name, g.id] },
                         { selected: @group_filter },
                         { class: "form-select", onchange: "this.form.submit();" } %>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <%= form.select :temporal_filter,
                         [["Upcoming Events", "upcoming"], ["Past Events", "past"]],
                         { selected: @temporal_filter },
+                        { class: "form-select", onchange: "this.form.submit();" } %>
+      </div>
+      <div class="col-md-4">
+        <%= form.select :frequency_filter,
+                        [["All Events", "all"], ["All Repeating", "repeating"]] + Event.frequencies.keys.map { |key| [key.humanize, key] },
+                        { selected: @frequency_filter || "all" },
                         { class: "form-select", onchange: "this.form.submit();" } %>
       </div>
     <% end %>
