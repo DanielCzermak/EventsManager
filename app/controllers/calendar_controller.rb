@@ -4,12 +4,9 @@ class CalendarController < ApplicationController
 
     @date_range = get_calendar_range(@start_date)
 
-    @user_events = Event.get_events_between_dates(@date_range.first, @date_range.last).visible_to(current_user)
-
-    @events_in_range = get_events_for_range
+    @user_events = Event.visible_to(current_user).get_events_between_dates(@date_range.first, @date_range.last)
 
     @user_groups = current_user.groups
-
     @group_filter = params[:group_filter] || "all"
 
     if @group_filter != "all"
@@ -21,18 +18,17 @@ class CalendarController < ApplicationController
       end
     end
 
-    if @user_events.empty?
-      flash[:alert] = "Current filter includes no events!"
-    end
-
+    @events_in_range = get_events_for_range
   end
 
   private
 
+  # Produces calendar date range the same way as simple_calendar
   def get_calendar_range(date)
     date.beginning_of_month.beginning_of_week..date.end_of_month.end_of_week
   end
 
+  # Constructs a hash of each day within the range with the events occurring on that day
   def get_events_for_range
     events_for_range = {}
     @date_range.each do |date|

@@ -16,7 +16,7 @@ class Event < ApplicationRecord
   scope :upcoming, -> { where("start_date > ?", Time.current).order(start_date: :asc) }
   scope :past, -> { where("end_date < ?", Time.current).order(start_date: :desc) }
 
-  scope :with_frequency, ->(frequency) {
+  scope :with_frequency, ->(frequency = nil) {
     case frequency
     when :once
       where(frequency: :once)
@@ -36,21 +36,54 @@ class Event < ApplicationRecord
     joins(:group).where(groups: { id: user.group_ids })
   }
 
-  def self.get_events_between_dates(start_date, end_date)
-    where("(frequency = 0 and start_date between ? and ?) or (frequency > 0 and start_date <= ?)", start_date, end_date, end_date)
+  # Gets all events that fully or partially fall within parameter range
+  def self.get_events_between_dates(range_start, range_end)
+    # Get one time events in range
+    one_time_events = with_frequency(:once).where("start_date <= ?", range_end)
+                                           .where("(end_date IS NULL OR end_date >= ?)", range_start)
+    # Get recurring events which have started
+    recurring_events = with_frequency.where("start_date <= ?", range_end)
+
+    one_time_events.or(recurring_events)
   end
 
+  # Checks if event occurs on the date parameter
   def is_on?(date)
-    event_date = start_date.to_date
-    return event_date == date if once?
-    return false if event_date > date
-    case frequency.to_sym
-    when :weekly then is_same_weekday?(event_date, date)
-    when :monthly then is_same_monthday?(event_date, date)
-    when :yearly then is_same_yearday?(event_date, date)
+    if once?
+      # One time event: check if date falls within event range
+      event_start = start_date.to_date
+      event_end = (end_date || start_date).to_date
+      date >= event_start && date <= event_end
     else
-      false
+      # Recurring event: use IceCube schedule, but subtract event length from start to correctly handle multiday events
+      duration = ((end_date || start_date) - start_date).to_i.seconds
+
+      # Get start and end of day so we can disregard the time component
+      date_range_start = date.beginning_of_day
+      date_range_end = date.end_of_day
+
+      # Use IceCube to check if the event occurs within the range minus event duration
+      schedule.occurrences_between(date_range_start - duration, date_range_end).any? do |occurrence|
+        occurrence_start = occurrence.to_date
+        occurrence_end = (occurrence + duration).to_date
+        date >= occurrence_start && date <= occurrence_end
+      end
     end
+  end
+
+  # Get IceCube schedule for event instance
+  def schedule
+    return nil if once?
+
+    schedule = IceCube::Schedule.new(start_date)
+
+    case frequency.to_sym
+    when :weekly then schedule.add_recurrence_rule(IceCube::Rule.weekly)
+    when :monthly then schedule.add_recurrence_rule(IceCube::Rule.monthly.day_of_month(start_date.day))
+    when :yearly then schedule.add_recurrence_rule(IceCube::Rule.yearly.month_of_year(start_date.month).day_of_month(start_date.day))
+    else nil
+    end
+    schedule
   end
 
   # Needed for simple calendar
@@ -67,22 +100,6 @@ class Event < ApplicationRecord
     if end_date <= start_date
       errors.add(:end_date, " must be after the start date")
     end
-  end
-
-  def is_same_weekday?(event_date, date)
-    event_date.wday == date.wday
-  end
-
-  def is_same_monthday?(event_date, date)
-    event_date.day == date.day
-  end
-
-  def is_same_yearday?(event_date, date)
-    event_date.month == date.month && is_same_monthday?(event_date, date)
-  end
-
-  def date_range
-    start_date..end_date
   end
 
 end

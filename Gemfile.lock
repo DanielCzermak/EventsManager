@@ -121,6 +121,7 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    ice_cube (0.17.0)
     io-console (0.8.0)
     irb (1.15.1)
       pp (>= 0.6.0)
@@ -342,6 +343,7 @@ DEPENDENCIES
   capybara
   debug
   devise (~> 4.9)
+  ice_cube
   jbuilder
   kamal
   mysql2 (~> 0.5)
