@@ -18,7 +18,7 @@ class CalendarController < ApplicationController
       end
     end
 
-    @events_in_range = get_events_for_range
+    @events_in_range = Calendar::EventFactory.produce_events_for_date_range(@date_range, @user_events)
   end
 
   private
@@ -26,19 +26,6 @@ class CalendarController < ApplicationController
   # Produces calendar date range the same way as simple_calendar
   def get_calendar_range(date)
     date.beginning_of_month.beginning_of_week..date.end_of_month.end_of_week
-  end
-
-  # Constructs a hash of each day within the range with the events occurring on that day
-  def get_events_for_range
-    events_for_range = {}
-    @date_range.each do |date|
-      events_for_date = []
-      @user_events.each do |event|
-        events_for_date << event if event.is_on?(date)
-      end
-      events_for_range[date] = events_for_date if events_for_date.any?
-    end
-    events_for_range
   end
 
 end

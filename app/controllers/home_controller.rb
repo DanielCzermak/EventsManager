@@ -1,8 +1,7 @@
 class HomeController < ApplicationController
   def index
-    this_week = DateTime.now.beginning_of_day..(DateTime.now + 7.days).end_of_day
-    @events_this_week = Event.visible_to(current_user).where(
-      "start_date between ? and ?", this_week.begin, this_week.end
-    ).order(start_date: :asc)
+    this_week = Date.today..(Date.today + 7.days)
+    user_events = Event.visible_to(current_user).get_events_between_dates(this_week.begin, this_week.end)
+    @events_this_week = Calendar::EventFactory.produce_events_for_date_range(this_week, user_events)
   end
 end

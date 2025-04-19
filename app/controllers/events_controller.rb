@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :event_auth_check, only: [ :edit, :update, :destroy ]
+  before_action :event_show_check, only: [ :show ]
 
   def index
     @user_events = Event.visible_to(current_user)
@@ -32,6 +33,10 @@ class EventsController < ApplicationController
 
     @user_events = @user_events.order(start_date: (@temporal_filter == "upcoming" ? :asc : :desc))
 
+  end
+
+  def show
+    @event = Event.find(params[:id])
   end
 
   def new
@@ -85,6 +90,14 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     unless @event.creator == current_user || @event.group.owner == current_user
       flash[:alert] = "You aren't authorized to perform this action!"
+      Rails.logger.warn("Illegal action attempted on event #{@event.id}!!")
+      redirect_to events_index_path
+    end
+  end
+
+  def event_show_check
+    @event = Event.find(params[:id])
+    unless @event.group.users.includes(current_user)
       Rails.logger.warn("Illegal action attempted on event #{@event.id}!!")
       redirect_to events_index_path
     end
