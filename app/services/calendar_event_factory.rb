@@ -1,6 +1,6 @@
 # Creates unique CalendarEvent instances for all events occurring within the date_range parameter
 # Handles reoccurring, multiday and partially in range events
-class Calendar::EventFactory
+class CalendarEventFactory
   def self.produce_events_for_date_range(date_range, events)
     return nil unless date_range&.any? && events&.any?
 

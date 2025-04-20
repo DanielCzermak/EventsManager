@@ -46,25 +46,9 @@
                         <% end %>
                       </p>
                     </div>
-
-                    <%# Decides how start and end date is displayed based on event length/end date presence%>
-                    <%# No end date: only start datetime %>
-                    <%# Start and end date same day: start datetime and end time %>
-                    <%# Start and end diff. day: start datetime and end datetime %>
                     <div class="col-4 text-end">
                       <small class="text-muted">
-                        <%= event.start_time.strftime("%Y-%m-%d") %>
-
-                        <% if event.end_time.present? %>
-                          <% if event.end_time.to_date > event.start_time.to_date %>
-                            - <%= event.end_time.strftime("%Y-%m-%d") %>
-                          <% end %>
-                          <br>
-                          <%= event.start_time.strftime("%H:%M") %> - <%= event.end_time.strftime("%H:%M") %>
-                        <% else %>
-                          <br>
-                          <%= event.start_time.strftime("%H:%M") %>
-                        <% end %>
+                        <%= event_dates_to_formatted_text(event.start_time, event.end_time) %>
                       </small>
                     </div>
                   </div>

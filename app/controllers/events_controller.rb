@@ -13,9 +13,9 @@ class EventsController < ApplicationController
 
     case @temporal_filter
     when "upcoming"
-      @user_events = @user_events.upcoming
+      @user_events = @user_events.upcoming.or(@user_events.where.not(frequency: :once))
     when "past"
-      @user_events = @user_events.past
+      @user_events = @user_events.past.where(frequency: :once)
     end
 
     if @group_filter != "all"

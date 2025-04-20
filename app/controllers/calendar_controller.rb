@@ -18,7 +18,7 @@ class CalendarController < ApplicationController
       end
     end
 
-    @events_in_range = Calendar::EventFactory.produce_events_for_date_range(@date_range, @user_events)
+    @events_in_range = CalendarEventFactory.produce_events_for_date_range(@date_range, @user_events)
   end
 
   private

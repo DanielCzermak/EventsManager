@@ -1,0 +1,36 @@
+<div class="d-flex flex-column h-100">
+  <div class="fw-bold">
+    <%= date.day %>
+  </div>
+
+  <div class="mt-1 calendar-events">
+    <% if events&.any? %>
+      <div class="list-group list-group-flush small">
+        <% events.each do |event| %>
+          <%= link_to events_show_path(event.id), class: "list-group-item list-group-item-action p-1 rounded mb-1",
+                      style: "background-color: color: white;" do %>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-truncate">
+                <%= event.name %>
+              </span>
+
+              <% if event.start_time.to_date == date %>
+                <span class="badge rounded-pill bg-success text-light ms-1">
+                  <%= event.start_time.strftime("%H:%M") %>
+                </span>
+              <% elsif event.end_time.to_date == date %>
+                <span class="badge rounded-pill bg-danger text-light ms-1">
+                  <%= event.end_time.strftime("%H:%M") %>
+                </span>
+              <% else %>
+                <span class="badge rounded-pill bg-info text-light ms-1">
+                  <---->
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

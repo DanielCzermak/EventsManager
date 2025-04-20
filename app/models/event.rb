@@ -13,8 +13,8 @@ class Event < ApplicationRecord
   validates :creator_id, :group_id, presence: true
   validate :end_date_after_start_date, if: -> { end_date.present? }
 
-  scope :upcoming, -> { where("start_date > ?", Time.current).order(start_date: :asc) }
-  scope :past, -> { where("end_date < ?", Time.current).order(start_date: :desc) }
+  scope :upcoming, -> { where("start_date >= ?", Time.current).order(start_date: :asc) }
+  scope :past, -> { where("start_date <  ?", Time.current).order(start_date: :desc) }
 
   scope :with_frequency, ->(frequency = nil) {
     case frequency
