@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :event_auth_check, only: [ :edit, :update, :destroy ]
+  before_action :event_length_check, only: [ :create, :update ]
   before_action :event_show_check, only: [ :show ]
 
   def index
@@ -90,15 +91,37 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     unless @event.creator == current_user || @event.group.owner == current_user
       flash[:alert] = "You aren't authorized to perform this action!"
-      Rails.logger.warn("Illegal action attempted on event #{@event.id}!!")
+      Rails.logger.warn("Illegal action attempted on event #{@event.id} by user #{current_user}!!")
       redirect_to events_index_path
+    end
+  end
+
+  def event_length_check
+    return unless params[:event] && params[:event][:frequency]
+
+    frequency = params[:event][:frequency].to_sym
+    start_date = params[:event][:start_date].to_date
+    end_date = params[:event][:end_date].to_date
+
+    return if (start_date && end_date.nil?) || !Event.frequencies.include?(frequency)
+
+    max_days = {
+      once: 365,
+      weekly: 7,
+      monthly: 31,
+      yearly: 365
+    }
+
+    if (end_date - start_date) + 1 > max_days[frequency]
+      flash[:alert] = "Event duration is too long for #{frequency} frequency. Maximum is #{max_days[frequency]} days."
+      redirect_back fallback_location: events_index_path
     end
   end
 
   def event_show_check
     @event = Event.find(params[:id])
     unless @event.group.users.includes(current_user)
-      Rails.logger.warn("Illegal action attempted on event #{@event.id}!!")
+      Rails.logger.warn("Illegal action attempted on event #{@event.id} by user #{current_user}!!")
       redirect_to events_index_path
     end
   end

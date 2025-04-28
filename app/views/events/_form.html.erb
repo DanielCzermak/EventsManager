@@ -51,7 +51,7 @@
   </div>
 
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <%= link_to 'Cancel', events_index_path, class: "btn btn-outline-secondary" %>
+    <%= link_to 'Cancel', :back, fallback_location: events_index_path, class: "btn btn-outline-secondary" %>
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
