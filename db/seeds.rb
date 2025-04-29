@@ -72,7 +72,8 @@ test_events_data = [
     end_date: DateTime.now + 1.days + 4.hours,
     location: "somewhere",
     creator: test1,
-    group: common_group
+    group: common_group,
+    frequency: :once
   },
   {
     name: "Multiday event",
@@ -81,7 +82,8 @@ test_events_data = [
     end_date: DateTime.now + 7.days,
     location: "test location",
     creator: test2,
-    group: secret_group
+    group: secret_group,
+    frequency: :once
   },
   {
     name: "test3 personal event",
@@ -90,7 +92,8 @@ test_events_data = [
     end_date: DateTime.now + 3.days - 6.hours,
     location: "test3's location",
     creator: test3,
-    group: test3.owned_groups.where(visibility: :personal).first
+    group: test3.owned_groups.where(visibility: :personal).first,
+    frequency: :once
   },
   {
     name: "far away event",
@@ -99,7 +102,38 @@ test_events_data = [
     end_date: DateTime.now + 12.days + 9.hours,
     location: "a location",
     creator: test1,
-    group: common_group
+    group: common_group,
+    frequency: :once
+  },
+  {
+    name: "weekly repeating event",
+    description: "weekly repeating",
+    start_date: DateTime.now + 1.days + 2. hours,
+    end_date: DateTime.now + 1.days + 2.hours + 10.minutes,
+    location: "a location",
+    creator: test1,
+    group: common_group,
+    frequency: :weekly
+  },
+  {
+    name: "monthly repeating event",
+    description: "monthly repeating",
+    start_date: DateTime.now + 3.days + 2. hours,
+    end_date: DateTime.now + 4.days + 2.hours + 10.minutes,
+    location: "a location",
+    creator: test1,
+    group: common_group,
+    frequency: :monthly
+  },
+  {
+    name: "yearly repeating event",
+    description: "yearly repeating",
+    start_date: DateTime.now + 7.days + 2. hours,
+    end_date: DateTime.now + 7.days + 2.hours + 10.minutes,
+    location: "a location",
+    creator: test1,
+    group: common_group,
+    frequency: :yearly
   }
 ]
 

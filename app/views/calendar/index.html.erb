@@ -1,37 +1,7 @@
-<%# List of events %>
 <div class="row">
   <div class="w-100">
-    <%= month_calendar events: @user_events do |date, events| %>
-      <div class="d-flex flex-column h-100">
-        <div class="fw-bold">
-          <%= date.day %>
-        </div>
-
-        <div class="mt-1 calendar-events" >
-          <% if events.any? %>
-            <div class="list-group list-group-flush small">
-              <% events.each do |event| %>
-                <%= link_to events_index_path, class: "list-group-item list-group-item-action p-1 rounded mb-1",
-                            style: "background-color: color: white;" do %>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-truncate">
-                      <%= event.name %>
-                    </span>
-                    <span class="badge rounded-pill bg-dark text-light ms-1">
-                      <% if event.end_date && event.start_date.to_date != event.end_date.to_date %>
-                        ---
-                      <% else  %>
-                        <%= event.start_date.strftime("%H:%M") %>
-                      <% end %>
-
-                    </span>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-      </div>
+    <%= month_calendar events: @events_in_range do |date, events| %>
+      <%= render partial: "calendar_day", locals: { date: date, events: events } %>
     <% end %>
   </div>
 </div>

@@ -1,13 +1,13 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <div class="field mb-2">
     <%= f.label :email, class: "form-label" %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control #{"is-invalid" if resource.errors[:email].any?}" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", in: 5..50, class: "form-control #{"is-invalid" if resource.errors[:email].any?}" %>
     <small class="form-text text-muted">Between 5 and 50 characters</small>
   </div>
 
   <div class="field mb-2">
     <%= f.label :username, class: "form-label" %><br />
-    <%= f.text_field :username, required: true, class: "form-control #{"is-invalid" if resource.errors[:username].any?}" %>
+    <%= f.text_field :username, required: true, in: 3..28, class: "form-control #{"is-invalid" if resource.errors[:username].any?}" %>
     <small class="form-text text-muted">Between 3 and 28 characters</small>
   </div>
 

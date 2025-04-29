@@ -26,10 +26,10 @@
         <div class="card-body p-0">
 
           <%# Display next weeks events only if they exist %>
-          <% if @events_this_week.any? %>
+          <% if @events_this_week&.any? %>
             <div class="list-group list-group-flush">
               <% @events_this_week.each do |event| %>
-                <%= link_to root_path, class: "list-group-item list-group-item-action" do %>
+                <%= link_to events_show_path(event.id), class: "list-group-item" do %>
                   <div class="row align-items-center">
                     <div class="col-8">
                       <h6 class="mb-1"><%= event.name %></h6>
@@ -46,25 +46,9 @@
                         <% end %>
                       </p>
                     </div>
-
-                    <%# Decides how start and end date is displayed based on event length/end date presence%>
-                    <%# No end date: only start datetime %>
-                    <%# Start and end date same day: start datetime and end time %>
-                    <%# Start and end diff. day: start datetime and end datetime %>
                     <div class="col-4 text-end">
                       <small class="text-muted">
-                        <%= event.start_date.strftime("%Y-%m-%d") %>
-
-                        <% if event.end_date.present? %>
-                          <% if event.end_date.to_date > event.start_date.to_date %>
-                            - <%= event.end_date.strftime("%Y-%m-%d") %>
-                          <% end %>
-                          <br>
-                          <%= event.start_date.strftime("%H:%M") %> - <%= event.end_date.strftime("%H:%M") %>
-                        <% else %>
-                          <br>
-                          <%= event.start_date.strftime("%H:%M") %>
-                        <% end %>
+                        <%= event_dates_to_formatted_text(event.start_time, event.end_time) %>
                       </small>
                     </div>
                   </div>

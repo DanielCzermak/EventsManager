@@ -4,13 +4,13 @@
               local: true do |form| %>
   <div class="mb-3">
     <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", required: true %>
+    <%= form.text_field :name, in: 5..50, class: "form-control", required: true %>
     <small class="form-text text-muted">Between 5 and 50 characters</small>
   </div>
 
   <div class="mb-3">
     <%= form.label :description, class: "form-label" %>
-    <%= form.text_area :description, class: "form-control", rows: 3 %>
+    <%= form.text_area :description, max: 1000, class: "form-control", rows: 3 %>
     <small class="form-text text-muted">Max. 1000 characters</small>
   </div>
 
@@ -23,7 +23,7 @@
   </div>
 
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <%= link_to "Cancel", groups_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "Cancel", :back, fallback_location: groups_path, class: "btn btn-outline-secondary" %>
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>

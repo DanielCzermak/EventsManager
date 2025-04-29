@@ -1282,6 +1282,38 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="ice_cube (v0.17.0) [path][gem]" type="rubylib">
+        <properties>
+          <option name="additionalInfo">
+            <AdditionalInfo>
+              <option name="authors" value="N/A" />
+              <option name="email" value="N/A" />
+              <option name="homepage" value="N/A" />
+              <option name="summary" value="N/A" />
+            </AdditionalInfo>
+          </option>
+          <option name="fromPath" value="true" />
+          <option name="name" value="ice_cube" />
+          <option name="requirePaths">
+            <list>
+              <option value="lib" />
+            </list>
+          </option>
+          <option name="url" value="file://$USER_HOME$/Gems/ruby/3.2.0/gems/ice_cube-0.17.0" />
+          <option name="version" value="0.17.0" />
+        </properties>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Gems/ruby/3.2.0/gems/ice_cube-0.17.0/lib" />
+          <root url="file://$USER_HOME$/Gems/ruby/3.2.0/gems/ice_cube-0.17.0/config" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$USER_HOME$/Gems/ruby/3.2.0/gems/ice_cube-0.17.0/lib" />
+          <root url="file://$USER_HOME$/Gems/ruby/3.2.0/gems/ice_cube-0.17.0/config" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="io-console (v0.8.0) [path][gem]" type="rubylib">
         <properties>
           <option name="additionalInfo">

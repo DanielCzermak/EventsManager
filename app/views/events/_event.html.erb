@@ -15,27 +15,14 @@
         <% if event.location.present? %>
           <span class="ms-2"><i class="bi bi-geo-alt me-1"></i><%= event.location %></span>
         <% end %>
+
+        <span class="ms-2"><i class="bi bi-clock me-1"></i><%= frequency_to_text(event.frequency) %></span>
       </p>
     </div>
 
-    <%# Decides how start and end date is displayed based on event length/end date presence%>
-    <%# No end date: only start datetime %>
-    <%# Start and end date same day: start datetime and end time %>
-    <%# Start and end diff. day: start datetime and end datetime %>
     <div class="col-3 text-end">
       <small class="text-muted">
-        <%= event.start_date.strftime("%Y-%m-%d") %>
-
-        <% if event.end_date.present? %>
-          <% if event.end_date.to_date > event.start_date.to_date %>
-            - <%= event.end_date.strftime("%Y-%m-%d") %>
-          <% end %>
-          <br>
-          <%= event.start_date.strftime("%H:%M") %> - <%= event.end_date.strftime("%H:%M") %>
-        <% else %>
-          <br>
-          <%= event.start_date.strftime("%H:%M") %>
-        <% end %>
+        <%= event_dates_to_formatted_text(event.start_date, (event.end_date || nil)) %>
       </small>
     </div>
 

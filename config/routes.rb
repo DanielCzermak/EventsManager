@@ -8,10 +8,11 @@ Rails.application.routes.draw do
     end
   end
 
-  get "calendar/index", to: "calendar#index", as: "calendar"
+  get "calendar/", to: "calendar#index", as: "calendar"
 
   get "events", to: "events#index", as: "events_index"
   get "events/new", to: "events#new", as: "events_new"
+  get "events/:id", to: "events#show", as: "events_show"
   post "events/create", to: "events#create", as: "events_create"
   get "events/:id/edit", to: "events#edit", as: "events_edit"
   patch "events/:id", to: "events#update", as: "events_update"
