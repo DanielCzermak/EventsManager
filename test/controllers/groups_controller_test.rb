@@ -1,48 +1,46 @@
 require "test_helper"
 
 class GroupsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get groups_index_url
-    assert_response :success
+  def setup
+    @user = users(:testuser_one)
+    login_as(@user)
   end
 
-  test "should get show" do
-    get groups_show_url
+  test "should get index" do
+    get groups_url
     assert_response :success
   end
 
   test "should get new" do
-    get groups_new_url
-    assert_response :success
-  end
-
-  test "should get create" do
-    get groups_create_url
+    get new_group_url
     assert_response :success
   end
 
   test "should get edit" do
-    get groups_edit_url
+    get edit_group_url(groups(:group_two))
     assert_response :success
   end
 
-  test "should get update" do
-    get groups_update_url
-    assert_response :success
+   test "shouldn't get edit" do
+    get edit_group_url(groups(:group_one))
+    assert_redirected_to groups_url
   end
 
-  test "should get destroy" do
-    get groups_destroy_url
-    assert_response :success
+  test "should join group with code" do
+    post join_groups_url, params: { joinCode: "12345678" }
+    groups(:group_one).users.exists?(@user.id)
+    assert_redirected_to groups_url
   end
 
-  test "should get join" do
-    get groups_join_url
-    assert_response :success
+  test "should not join group with invalid code" do
+    post join_groups_url, params: { joinCode: "VERYWRONGCODE" }
+    assert_redirected_to groups_url
+    follow_redirect!
+    assert_match "Invalid join code", flash[:alert]
   end
 
-  test "should get leave" do
-    get groups_leave_url
-    assert_response :success
+  def login_as(user, password: 'testpass')
+    post user_session_path, params: { user: { login: user.username, password: password } }
+    follow_redirect! while response.redirect?
   end
 end

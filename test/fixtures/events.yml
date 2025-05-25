@@ -1,19 +1,29 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+event_one:
+  name: Monthly Meeting
+  description: Monthly meeting.
+  start_date: 2025-06-01 10:00:00
+  end_date: 2025-06-01 11:00:00
+  location: Building A
+  creator: testuser_one
+  group: group_one
+  frequency: 2
 
-one:
-  name: MyString
-  description: MyText
-  start_datetime: 2025-03-31 16:52:03
-  end_datetime: 2025-03-31 16:52:03
-  location: MyString
-  user: one
-  group: one
+event_two:
+  name: One off event
+  description: Event that happens only once.
+  start_date: 2025-06-03 14:00:00
+  end_date: 2025-06-03 15:30:00
+  location: Online
+  creator: testuser_two
+  group: group_two
+  frequency: 0
 
-two:
-  name: MyString
-  description: MyText
-  start_datetime: 2025-03-31 16:52:03
-  end_datetime: 2025-03-31 16:52:03
-  location: MyString
-  user: two
-  group: two
+event_three:
+  name: Weekly Meeting
+  description: Weekly meeting.
+  start_date: 2025-06-10 09:00:00
+  end_date: 2025-06-10 12:00:00
+  location: Building B
+  creator: testuser_two
+  group: group_one
+  frequency: 1

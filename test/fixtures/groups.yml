@@ -1,13 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+group_one:
+  name: General Group
+  description: General group.
+  visibility: 0
+  owner: testuser_two
+  join_code: 12345678
 
-one:
-  name: MyString
-  description: MyText
-  personal: false
-  user: one
-
-two:
-  name: MyString
-  description: MyText
-  personal: false
-  user: two
+group_two:
+  name: Private Group
+  description: private group.
+  visibility: 1
+  owner: testuser_one
+  join_code: 87654321

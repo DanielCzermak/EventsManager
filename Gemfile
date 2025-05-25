@@ -61,3 +61,5 @@ gem "devise", "~> 4.9"
 gem "simple_calendar"
 
 gem "ice_cube"
+
+gem "webdrivers"
